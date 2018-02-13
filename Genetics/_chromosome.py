@@ -8,10 +8,10 @@ class Chromosome(object):
     def _generate(self, count, randomize): #INITILIZE THE CHROMOSOME TO ALL (0)s IF 'RANDOMIZE' IS FALSE
         self._info = ""
         if not randomize:
-            for i in range(0, count):
+            for i in range(0, count, 1):
                 self._info += str(i)
         else:
-            for i in range(0, count):
+            for i in range(0, count, 1):
                 x = random.randint(0, 1)
                 self._info += str(x)
 

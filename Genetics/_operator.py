@@ -2,6 +2,13 @@ import os
 import random
 from _chromosome import Chromosome
 
+def Selection(population):
+    #DISPLAY ALL OF THE POPULATION
+    #SELECT TWO FROM POPULATION FOR CROSSOVER
+    #RETURN A NEW LIST OF CHROMOSOME 
+    for p in population:
+        p._printInfo()
+
 def Crossover(pivot, c1, c2):
         #RETURN TWO CHROMOSOMES
         C1 = ""
@@ -32,20 +39,3 @@ def Mutation(mutationRate, c):
             s += c._info[i] #SAVE THE ORIGINAL INFO
     
     return s
- 
-def main():
-    chromosome1 = Chromosome("10101111")
-    chromosome2 = Chromosome("00000000")
-
-    #chromosome1._printInfo()
-    #chromosome2._printInfo()
-
-    #children = Crossover(6, chromosome1, chromosome2)
-    #print children
-
-    chromosome1._printInfo()
-    chromosome2._printInfo()
-
-    #print Mutation(50, chromosome1)
-
-main()
