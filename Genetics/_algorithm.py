@@ -37,14 +37,12 @@ class Algorithm(object):
         # while True:
         #     currentGeneration = Selection(self.population)
 
-        
-
-
 def main():
     a = Algorithm()
     e = Expression('(Z) * (A + B) * (B + A) * (!D + E + F)')
     chromo_count = len(e.GetVariables())
     popu1 = a._generate_population(chromo_count, 6)
     Selection(popu1)
+    e.PrintInfo()
 
 main()

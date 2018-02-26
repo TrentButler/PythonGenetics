@@ -24,18 +24,18 @@ def Crossover(pivot, c1, c2):
         return [C1, C2]
 
 def Mutation(mutationRate, c):
-    #ITERATE THROUGH THE CHROMOSOME, DETERMINE IF THIS SPOT NEEDS TO BE FLIPPED
-    if mutationRate > 100: #?????
-        mutationRate = 100 #?????
+    #ITERATE THROUGH THE CHROMOSOME, DETERMINE IF A SPECIFIC SPOT NEEDS TO BE REVERSED
+    if mutationRate > 100: #LIMIT THE RATE OF MUTUATION BY 100%
+        mutationRate = 100 #IF MUTATION RATE IS GREATER THAN 100%, ASSIGN 100 TO 'mutationRate'
 
-    s = ""
+    mutatedChromo = "" 
     for i in range(0, len(c._info)):
-        x = random.uniform(0, 100)
-        if x <= mutationRate:
+        x = random.uniform(0, 100) #GENERATE A RANDOM NUMBER
+        if x <= mutationRate: #IF THE RANDOM NUMBER GENERATED IS LESS THAN OR EQUAL TO THE MUTATION RATE, MUTATE THIS SPOT
             m = bool(int(c._info[i])) #TYPECAST AS A BOOLEAN
-            s += str(int(not m)) #REVERSE THE RESULT, TYPECAST BACK TO STRING AND APPEND
+            mutatedChromo += str(int(not m)) #REVERSE THE RESULT, TYPECAST BACK TO STRING AND APPEND
             #c._info[i] = str(not m)
         else:
-            s += c._info[i] #SAVE THE ORIGINAL INFO
+            mutatedChromo += c._info[i] #SAVE THE ORIGINAL INFO
     
-    return s
+    return mutatedChromo
