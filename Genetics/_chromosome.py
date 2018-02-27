@@ -15,5 +15,8 @@ class Chromosome(object):
                 x = random.randint(0, 1)
                 self._info += str(x)
 
+    def _getInfo(self):
+        return self._info
+
     def _printInfo(self):
         print self._info

@@ -1,16 +1,19 @@
 import os
 import random
 from _chromosome import Chromosome
+from _expression import Expression
 
 def Selection(population):
     #DISPLAY ALL OF THE POPULATION
     #SELECT TWO FROM POPULATION FOR CROSSOVER
     #RETURN A NEW LIST OF CHROMOSOME 
-    for p in population:
-        p._printInfo()
+    p1 = population[0] # 1ST MOST FIT 
+    p2 = population[1] # 2ND MOST FIT
+    new_population = [p1,p2]
+    return new_population
 
 def Crossover(pivot, c1, c2):
-        #RETURN TWO CHROMOSOMES
+        #RETURN TWO CHROMOSOME OBJECTS
         C1 = ""
         C2 = ""
         for i in range(0, pivot):
@@ -21,7 +24,10 @@ def Crossover(pivot, c1, c2):
             C1 += c2._info[i]
             C2 += c1._info[i]
 
-        return [C1, C2]
+        c1 = Chromosome(C1)
+        c2 = Chromosome(C2)
+
+        return [c1, c2]
 
 def Mutation(mutationRate, c):
     #ITERATE THROUGH THE CHROMOSOME, DETERMINE IF A SPECIFIC SPOT NEEDS TO BE REVERSED

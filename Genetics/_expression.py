@@ -1,4 +1,5 @@
 import os
+import random
 
 class Expression(object):
     def __init__(self, expression):
@@ -12,6 +13,21 @@ class Expression(object):
         self.GetVariables()
         self.GetClauses()
 
+    def LoadRandomExpression(self):
+        #READ IN EACH EXPRESSION FROM FILE 'expressions.txt' INTO A LIST
+        #PICK A RANDOM EXPRESSION
+        file = open('expressions.txt', 'r')
+        all_expressions = list(file)
+        count = len(all_expressions)
+        i = random.randint(0, count-1)
+        expression = all_expressions[i]
+
+        self.expression = expression #ASSIGN NEW EXPRESSION
+        self.py_expression = self.GetPyExpression() #UPDATE MEMEBER VARIABLES
+        self.GetPairs()
+        self.GetVariables()
+        self.GetClauses()
+    
     def GetPyExpression(self):
         return self.expression.replace('*', 'and').replace('+', 'or').replace('!', 'not ')
 
@@ -42,6 +58,8 @@ class Expression(object):
         
         self.pairs = pairs
         return self.pairs #RETURN A LIST
+    def _get_pairs(self):
+        return self.pairs
 
     def GetClauses(self):
         clause = ''
@@ -98,15 +116,22 @@ class Expression(object):
         
         self.expression = new_expression
         self.py_expression = self.GetPyExpression()
+        #self.GetPairs()
+        #self.GetVariables()
+        self.GetClauses()
         
-    def TestExpression(self):
+    def PrintTestExpression(self):
         print 'result: ' + str(bool(eval(self.py_expression)))
 
+    def _test_expression(self):
+        return bool(eval(self.py_expression))
 
-def main():
-    e = Expression('(z) * (a + b) * (b + a) * (!d + e + f)')
-    e.Injection('110111')
-    e.PrintInfo()
-    e.TestExpression()
 
-main()
+# def main():
+#     e = Expression('(!a * b) + (c * d) + (e * !f) + (g * h)')
+#     #e.LoadRandomExpression()
+#     e.Injection('11111111')
+#     e.PrintInfo()
+#     e.TestExpression()
+
+# main()
