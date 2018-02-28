@@ -20,3 +20,7 @@ class Chromosome(object):
 
     def _printInfo(self):
         print self._info
+
+def main():
+    c = Chromosome('111111')
+    print c._printInfo()

@@ -13,7 +13,6 @@ from _expression import Expression
 # - DETERMINE FITNESS OF NEW POPULATION (POPULATION(GENERATION# + 1))
 
 class Algorithm(object):
-
     def __init__(self):
         self.data = []
         self.generation = 1
@@ -106,10 +105,11 @@ class Algorithm(object):
                 self.population.append(chromo) #ADD THE CHROMOSOME TO THE POPULATION
         self._file_dump.close()
 
+
 def main():
     a = Algorithm()
-    e = Expression('(a) +(b) +(c) +(d) +(e) +(f) +(g) +(h) +(i) +(j) +(!k) +(!l) +(!m)+ (!n)+ (!o)+(!p) +(!q) +(!r) +(!s)+(!t)+(!u)+(!v)+(!w)+(!x)+(!y)+(!z)')
-    e.LoadRandomExpression()
+    e = Expression('(a) * (b) * (c) * (d) * (!e) * (!f) * (!g) * (!h)')
+    #e.LoadRandomExpression()
     a._run_algorithm(e)
     a._file_dump.close()
     print 'DONE'

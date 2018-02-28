@@ -127,11 +127,11 @@ class Expression(object):
         return bool(eval(self.py_expression))
 
 
-# def main():
-#     e = Expression('(!a * b) + (c * d) + (e * !f) + (g * h)')
-#     #e.LoadRandomExpression()
-#     e.Injection('11111111')
-#     e.PrintInfo()
-#     e.TestExpression()
+def main():
+    e = Expression('(!a * b) + (c * d) + (e * !f) + (g * h)')
+    #e.LoadRandomExpression()
+    e.Injection('11111111')
+    e.PrintInfo()
+    e.PrintTestExpression()
 
-# main()
+main()
