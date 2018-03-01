@@ -12,6 +12,10 @@ from _expression import Expression
 # - PERFORM MUTATION OF NEW POPULATION (POPULATION(GENERATION# + 1))
 # - DETERMINE FITNESS OF NEW POPULATION (POPULATION(GENERATION# + 1))
 
+
+#NEEDS WORK
+#WILL FIND SOLUTION, BUT WILL NOT FALL OUT OF EXECUTION
+#LN118 'self.is_finished = self._determine_solution(expression)'
 class Algorithm(object):
     def __init__(self):
         self.data = []
@@ -44,7 +48,7 @@ class Algorithm(object):
             chromosome_length = len(chromo._getInfo()) #LENGTH OF THE CHROMOSOME
             for pair in pairs:
                 value = pair[1] #TRUE/FALSE VALUE
-                variable = pair[0] 
+                variable = pair[0] #STRING REPRESENTATION OF VARIABLE (a-z A-Z) or (!a-!z !A-!Z) 
                 
                 if('!' in variable):
                     if(value is '0'): #CHECK IF THIS POSITION IS FALSE
@@ -74,6 +78,15 @@ class Algorithm(object):
 
         return expression._test_expression() #RETURN RESULT
 
+    def _pluck(self, score):
+        if(score > 100):
+            score = float(100)
+        #ITERATE THROUGH THE POPULATION, REMOVE ALL CHROMOSOMES THAT HAVE A SCORE OF 'score' OR LOWER
+        for chromoPair in self.population_scored:
+            _score = float(chromoPair[1])
+            if(_score <= score):
+                self.population_scored.remove(chromoPair)
+
     def _dump_info(self):
         self._file_dump.write('\n')
 
@@ -81,6 +94,13 @@ class Algorithm(object):
         for chromo_pair in self.population_scored:
            dump = (chromo_pair[0]._getInfo(), str(chromo_pair[1]), 'GENERATION: ' + str(self.generation))
            self._file_dump.write(str(dump) + '\n')
+    def _print_info(self):
+        os.system('cls')
+
+        print('ALGORITHM FINISHED?: ' + str(self.is_finished) + '\n')
+        for chromo_pair in self.population_scored:
+           dump = (chromo_pair[0]._getInfo(), str(chromo_pair[1]), 'GENERATION: ' + str(self.generation))
+           print(str(dump) + '\n')
 
     def _run_algorithm(self, expression):
         #DETERMINE CHROMOSOME COUNT
@@ -88,19 +108,22 @@ class Algorithm(object):
         self.population = self._generate_population(c_count, 4)
 
         while not self.is_finished:
-            print self.generation
-            if(self.generation >= 18):
-                self.is_finished = True
+            #print self.generation
+            if(self.generation >= 14):
+                #self.is_finished = True
                 self._dump_info()
                 return
 
             self._determine_fitness(expression)
             self.is_finished = self._determine_solution(expression)
+            self._pluck(20)
             self._dump_info() #OUTPUT INFORMATION
+            #self._print_info() 
             
             if(self.is_finished):
                 print 'SOLUTION: ' + self.population[0]._getInfo()
                 self._dump_info()
+                return
 
             random_pivot = random.randint(0, c_count) #RANDOM CROSSOVER PIVOT POINT BETWEEN 0 AND LENGTH(CHROMOSOME)
             random_mutation_rate = random.randint(0, 100) #RANDOM MUTATION RATE BETWEEN 0-100
@@ -111,12 +134,13 @@ class Algorithm(object):
             for chromo in new_generation:
                 chromo._info = Mutation(random_mutation_rate, chromo) #PERFORM MUTATION
                 self.population.append(chromo) #ADD THE CHROMOSOME TO THE POPULATION
-        self._file_dump.close()
+        
+        self._file_dump.close() #CLOSE THE OPENED FILE AFTER ALGORITHM IS FINISHED
 
 
 def main():
     a = Algorithm()
-    e = Expression('(a) * (b) * (c) * (d) * (!e) * (!f) * (!g) * (!h)')
+    e = Expression('(a) * (b) * (c) * (!d)')
     #e.LoadRandomExpression()
     a._run_algorithm(e)
     a._file_dump.close()
