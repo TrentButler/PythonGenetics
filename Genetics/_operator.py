@@ -7,8 +7,10 @@ def Selection(population):
     #DISPLAY ALL OF THE POPULATION
     #SELECT TWO FROM POPULATION FOR CROSSOVER
     #RETURN A NEW LIST OF CHROMOSOME 
-    p1 = population[0] # 1ST MOST FIT 
-    p2 = population[1] # 2ND MOST FIT
+    p1 = population[0] # 1ST MOST FIT
+
+    random_parent = random.randint(1, len(population) - 1)
+    p2 = population[random_parent] # PICK A RANDOM SECOND PARENT
     new_population = [p1,p2]
     return new_population
 

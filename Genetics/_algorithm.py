@@ -43,9 +43,17 @@ class Algorithm(object):
             final_score = 0 #FINAL CALCULATED FITNESS SCORE
             chromosome_length = len(chromo._getInfo()) #LENGTH OF THE CHROMOSOME
             for pair in pairs:
-                value = pair[1] #TRUE/FALSE VALUE 
-                if(value is '1'): #CHECK IF THIS POSITION IS TRUE
-                    raw_score += 1 #INCRENMENT THIS CHROMOSOME'S SCORE
+                value = pair[1] #TRUE/FALSE VALUE
+                variable = pair[0] 
+                
+                if('!' in variable):
+                    if(value is '0'): #CHECK IF THIS POSITION IS FALSE
+                        raw_score += 1 #INCREMENT THIS CHROMOSOME'S SCORE
+                else:
+                    if(value is '1'): #CHECK IF THIS POSITION IS TRUE
+                        raw_score += 1 #INCRENMENT THIS CHROMOSOME'S SCORE
+
+                
             
             final_score = (float(raw_score) / chromosome_length) * 100 #FITNESS SCORE CALCULATION
 
@@ -81,15 +89,15 @@ class Algorithm(object):
 
         while not self.is_finished:
             print self.generation
-            if(self.generation >= 10):
+            if(self.generation >= 18):
                 self.is_finished = True
                 self._dump_info()
                 return
 
             self._determine_fitness(expression)
-            self._dump_info() #OUTPUT INFORMATION
-
             self.is_finished = self._determine_solution(expression)
+            self._dump_info() #OUTPUT INFORMATION
+            
             if(self.is_finished):
                 print 'SOLUTION: ' + self.population[0]._getInfo()
                 self._dump_info()

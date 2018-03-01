@@ -4,7 +4,7 @@ import random
 class Expression(object):
     def __init__(self, expression):
         self.data = []
-        self.expression = expression.lower()
+        self.expression = expression
         self.py_expression = self.GetPyExpression()
         self.pairs = []
         self.variables = []
@@ -41,23 +41,75 @@ class Expression(object):
             if(ord(char) >= 97 and ord(char) <= 122):
                 #VALID VARIABLE
                 rawVariables.append(char)
+                continue
+
+            if(ord(char) >= 65 and ord(char) <= 90):
+                #VALID VARIABLE
+                rawVariables.append(char)
+                continue
 
 
         self.variables = list(set(rawVariables)) #REMOVES DUPLICATES
+        self.variables.sort(cmp=None, key=lambda x: x, reverse=False)
         return self.variables #RETURN A LIST
     
     def GetPairs(self):
         #FIND THE PAIRS FROM 'expression'
         #NO DUPLICATES
         #TESTCASE = (A + B) * (B + C) * (!D + E + F)
-        rawPairs = self.GetVariables()
+        
+        rawVariables = []
+        
+        s = '' 
+        for char in self.expression:
+            if(char is '!'):
+                s += '!'
+                continue
+            if(ord(char) >= 97 and ord(char) <= 122): #LOWERCASE CHECK
+                #VALID VARIABLE
+                c = ''
+                if(s is '!'):
+                    c += s
+                    c += char
+                    rawVariables.append(c)
+                    s = ''
+                else:
+                    rawVariables.append(char)
+                continue
+            if(ord(char) >= 65 and ord(char) <= 90): #UPPERCASE CHECK
+                #VALID VARIABLE
+                C = ''
+                if(s is '!'):
+                    C += s
+                    C += char
+                    rawVariables.append(C)
+                    s = ''
+                else:
+                    rawVariables.append(char)
+                continue
+                
+        variables = list(set(rawVariables)) #REMOVES DUPLICATES
+
+        variables.sort(cmp=None, key=lambda x: x, reverse=False) #SORT THE LIST
+
+        rawPairs = variables
         pairs = []
-        for var in rawPairs:
+        #AFTER REMOVING DUPLICATES, SORT THE LIST
+        for var in rawPairs: #FIRST PASS, ONLY STRINGS WITHOUT '!'
+            if(len(var) > 1):
+                continue
             pair = (str(var), "")
             pairs.append(pair)
-        
+
+        for var in rawPairs: #SECOND PASS, ONLY STRINGS WITH '!'
+            if(len(var) <= 1):
+                continue
+            pair = (str(var), "")
+            pairs.append(pair)
+
         self.pairs = pairs
         return self.pairs #RETURN A LIST
+
     def _get_pairs(self):
         return self.pairs
 
@@ -105,14 +157,31 @@ class Expression(object):
         for char in self.expression:
             if(ord(char) >= 97 and ord(char) <= 122):
                 #VALID VARIABLE
+                for pair in self.pairs:                    
+                    raw_var = pair[0]
+                    var = ''
+                    if(len(raw_var) > 1):
+                        var = raw_var[1]
+                    else:
+                        var = raw_var
+
+                    value = pair[1]
+                    if(char is var):
+                        new_expression += value
+                continue
+
+            if(ord(char) >= 65 and ord(char) <= 90):
+                #VALID VARIABLE
                 for pair in self.pairs:
                     var = pair[0]
                     value = pair[1]
                     if(char is var):
                         new_expression += value
+                continue
                         
             else:
                 new_expression += char
+                continue
         
         self.expression = new_expression
         self.py_expression = self.GetPyExpression()
@@ -127,11 +196,11 @@ class Expression(object):
         return bool(eval(self.py_expression))
 
 
-def main():
-    e = Expression('(!a * b) + (c * d) + (e * !f) + (g * h)')
-    #e.LoadRandomExpression()
-    e.Injection('11111111')
-    e.PrintInfo()
-    e.PrintTestExpression()
+# def main():
+#     e = Expression('(a) * (b) * (c) * (!d)')
+#     #e.LoadRandomExpression()
+#     e.Injection('1110')
+#     e.PrintInfo()
+#     e.PrintTestExpression()
 
-main()
+# main()
