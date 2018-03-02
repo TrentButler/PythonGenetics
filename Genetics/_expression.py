@@ -5,6 +5,7 @@ class Expression(object):
     def __init__(self, expression):
         self.data = []
         self.expression = expression
+        self._original_expression = self.expression
         self.py_expression = self.GetPyExpression()
         self.pairs = []
         self.variables = []
@@ -88,24 +89,28 @@ class Expression(object):
                     rawVariables.append(char)
                 continue
                 
-        variables = list(set(rawVariables)) #REMOVES DUPLICATES
-
-        variables.sort(cmp=None, key=lambda x: x, reverse=False) #SORT THE LIST
+        variables = rawVariables #REMOVES DUPLICATES                
+        #variables = list(set(rawVariables)) #REMOVES DUPLICATES
+        #variables.sort(cmp=None, key=lambda x: x, reverse=False) #SORT THE LIST
 
         rawPairs = variables
         pairs = []
-        #AFTER REMOVING DUPLICATES, SORT THE LIST
-        for var in rawPairs: #FIRST PASS, ONLY STRINGS WITHOUT '!'
-            if(len(var) > 1):
-                continue
-            pair = (str(var), "")
+        for val in rawPairs:
+            pair = (val, '')
             pairs.append(pair)
 
-        for var in rawPairs: #SECOND PASS, ONLY STRINGS WITH '!'
-            if(len(var) <= 1):
-                continue
-            pair = (str(var), "")
-            pairs.append(pair)
+        #AFTER REMOVING DUPLICATES, SORT THE LIST
+        # for var in rawPairs: #FIRST PASS, ONLY STRINGS WITHOUT '!'
+        #     if(len(var) > 1):
+        #         continue
+        #     pair = (str(var), "")
+        #     pairs.append(pair)
+
+        # for var in rawPairs: #SECOND PASS, ONLY STRINGS WITH '!'
+        #     if(len(var) <= 1):
+        #         continue
+        #     pair = (str(var), "")
+        #     pairs.append(pair)
 
         self.pairs = pairs
         return self.pairs #RETURN A LIST

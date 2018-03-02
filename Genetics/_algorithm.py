@@ -39,6 +39,7 @@ class Algorithm(object):
         #   - SORT 'population' BASED ON HIGHEST FITNESS SCORE
         
         for chromo in self.population:
+            expression.expression = expression._original_expression
             expression.Injection(chromo._getInfo()) #INJECT THE INFORMATIION FROM THE CHROMOSOME INTO THE EXPRESSION
             
             pairs = expression._get_pairs() #GET THE ('VARIABLE', 'VALUE') PAIRS FROM THE EXPRESSION
@@ -74,18 +75,10 @@ class Algorithm(object):
         # - FALSE IF NOT THE SOLUTION
         s1 = self.population[0] #HIGHEST SCORED CHROMOSOME
 
+        expression.expression = expression._original_expression
         expression.Injection(s1._getInfo())
 
         return expression._test_expression() #RETURN RESULT
-
-    def _pluck(self, score):
-        if(score > 100):
-            score = float(100)
-        #ITERATE THROUGH THE POPULATION, REMOVE ALL CHROMOSOMES THAT HAVE A SCORE OF 'score' OR LOWER
-        for chromoPair in self.population_scored:
-            _score = float(chromoPair[1])
-            if(_score <= score):
-                self.population_scored.remove(chromoPair)
 
     def _dump_info(self):
         self._file_dump.write('\n')
@@ -108,15 +101,14 @@ class Algorithm(object):
         self.population = self._generate_population(c_count, 4)
 
         while not self.is_finished:
-            #print self.generation
-            if(self.generation >= 14):
+            print 'GENERATION: ' + str(self.generation)
+            if(self.generation >= 1000):
                 #self.is_finished = True
                 self._dump_info()
                 return
 
             self._determine_fitness(expression)
             self.is_finished = self._determine_solution(expression)
-            self._pluck(20)
             self._dump_info() #OUTPUT INFORMATION
             #self._print_info() 
             
@@ -125,22 +117,25 @@ class Algorithm(object):
                 self._dump_info()
                 return
 
-            random_pivot = random.randint(0, c_count) #RANDOM CROSSOVER PIVOT POINT BETWEEN 0 AND LENGTH(CHROMOSOME)
-            random_mutation_rate = random.randint(0, 100) #RANDOM MUTATION RATE BETWEEN 0-100
+            # random_pivot = random.randint(0, c_count) #RANDOM CROSSOVER PIVOT POINT BETWEEN 0 AND LENGTH(CHROMOSOME)
+            # random_mutation_rate = random.randint(0, 100) #RANDOM MUTATION RATE BETWEEN 0-100
+            pivot = int(c_count / 2)
+            mutation_rate = 25
 
             current_generation = Selection(self.population) #SELECT PARENTS
-            new_generation = Crossover(random_pivot, current_generation[0], current_generation[1]) #PERFORM CROSSOVER
+            self.population = []
+            self.population = Crossover(pivot, current_generation[0], current_generation[1]) #PERFORM CROSSOVER
             self.generation += 1
-            for chromo in new_generation:
-                chromo._info = Mutation(random_mutation_rate, chromo) #PERFORM MUTATION
-                self.population.append(chromo) #ADD THE CHROMOSOME TO THE POPULATION
+            for chromo in self.population:
+                chromo._info = Mutation(mutation_rate, chromo) #PERFORM MUTATION
+                #self.population.append(chromo) #ADD THE CHROMOSOME TO THE POPULATION
         
         self._file_dump.close() #CLOSE THE OPENED FILE AFTER ALGORITHM IS FINISHED
 
 
 def main():
     a = Algorithm()
-    e = Expression('(a) * (b) * (c) * (!d)')
+    e = Expression('(a) * (b) * (c) * (!d) * (!e) * (!f)')
     #e.LoadRandomExpression()
     a._run_algorithm(e)
     a._file_dump.close()
