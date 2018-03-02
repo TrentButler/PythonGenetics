@@ -10,7 +10,7 @@ class Chromosome(object):
         if not randomize:
             for i in range(0, count, 1):
                 self._info += str(i)
-        else:
+        else: 
             for i in range(0, count, 1):
                 x = random.randint(0, 1)
                 self._info += str(x)

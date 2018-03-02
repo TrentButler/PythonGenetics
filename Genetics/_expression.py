@@ -200,11 +200,12 @@ class Expression(object):
     def _test_expression(self):
         return bool(eval(self.py_expression))
 
-# def main():
-#     e = Expression('(a) * (b) * (c) * (!d)')
-#     #e.LoadRandomExpression()
-#     e.Injection('1110')
-#     e.PrintInfo()
-#     e.PrintTestExpression()
+def main():
+    e = Expression('(a) * (b) * (c) * (!d)')
 
-# main()
+    #e.LoadRandomExpression()
+    #e.Injection('1110')
+    e.PrintInfo()
+    #e.PrintTestExpression()
+
+main()

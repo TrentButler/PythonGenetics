@@ -4,18 +4,13 @@ from _chromosome import Chromosome
 from _expression import Expression
 
 # INITIALIZE A POPULATION(GENERATION#)
-# DETERMAINE FITNESS OF POPULATION(GENERATION#)
+# DETERMINE FITNESS OF POPULATION(GENERATION#)
 # WHILE TERMINATING CONDITION IS NOT MET:
 # - SELECT PARENTS FROM POPULATION(GENERATION#)
 # - PERFORM CROSSOVER ON PARENTS
 #       - THIS CREATES A NEW POPULATION (POPULATION(GENERATION# + 1))
 # - PERFORM MUTATION OF NEW POPULATION (POPULATION(GENERATION# + 1))
 # - DETERMINE FITNESS OF NEW POPULATION (POPULATION(GENERATION# + 1))
-
-
-#NEEDS WORK
-#WILL FIND SOLUTION, BUT WILL NOT FALL OUT OF EXECUTION
-#LN118 'self.is_finished = self._determine_solution(expression)'
 class Algorithm(object):
     def __init__(self):
         self.data = []
@@ -37,7 +32,7 @@ class Algorithm(object):
         #ITERATE THROUGHT THE LIST OF CHROMOSOMES, 
         #   - ASSIGN A SCORE BASED ON CLOSENESS TO THE SOLUTION OUT OF ONE-HUNDRED (100)
         #   - SORT 'population' BASED ON HIGHEST FITNESS SCORE
-        
+        self.population_scored = []
         for chromo in self.population:
             expression.expression = expression._original_expression
             expression.Injection(chromo._getInfo()) #INJECT THE INFORMATIION FROM THE CHROMOSOME INTO THE EXPRESSION
@@ -62,7 +57,7 @@ class Algorithm(object):
             
             final_score = (float(raw_score) / chromosome_length) * 100 #FITNESS SCORE CALCULATION
 
-            scored_chromo = (chromo, final_score) #CREATE A NEW CHROMOSOME,SCORE PAIR
+            scored_chromo = (chromo, final_score) #CREATE A NEW CHROMOSOME,SCORE PAIR0
             self.population_scored.append(scored_chromo) #APPEND NEW PAIR TO 'population_scored' LIST
 
         self.population_scored.sort(cmp=None, key=lambda x: x[1], reverse=True) #SORT THE POPULATION BY THE HIGHEST SCORE
@@ -96,21 +91,20 @@ class Algorithm(object):
            print(str(dump) + '\n')
 
     def _run_algorithm(self, expression):
-        #DETERMINE CHROMOSOME COUNT
-        c_count = len(expression.GetVariables())
-        self.population = self._generate_population(c_count, 4)
+        
+        c_count = len(expression.GetVariables()) #DETERMINE CHROMOSOME COUNT
+        num_children = c_count
+        self.population = self._generate_population(c_count, 4) #INITIALIZE THE POPULATION
 
-        while not self.is_finished:
+        while not self.is_finished: 
             print 'GENERATION: ' + str(self.generation)
-            if(self.generation >= 1000):
-                #self.is_finished = True
+            if(self.generation >= 1000): #LIMIT THE ALGORITHM TO ONE-THOUSAND GENERATIONS
                 self._dump_info()
                 return
 
-            self._determine_fitness(expression)
-            self.is_finished = self._determine_solution(expression)
-            self._dump_info() #OUTPUT INFORMATION
-            #self._print_info() 
+            self._determine_fitness(expression) #DETERMINE FITNESS OF POPULATION
+            self.is_finished = self._determine_solution(expression) #DETERMINE IF THE SOLUTION IS FINISHED
+            self._dump_info() #OUTPUT RELEVANT INFORMATION
             
             if(self.is_finished):
                 print 'SOLUTION: ' + self.population[0]._getInfo()
@@ -119,27 +113,30 @@ class Algorithm(object):
 
             # random_pivot = random.randint(0, c_count) #RANDOM CROSSOVER PIVOT POINT BETWEEN 0 AND LENGTH(CHROMOSOME)
             # random_mutation_rate = random.randint(0, 100) #RANDOM MUTATION RATE BETWEEN 0-100
-            pivot = int(c_count / 2)
-            mutation_rate = 25
+            pivot = int(c_count / 2) #PIVOT OF CROSSOVER IS HALF OF A CHROMOSOME
+            mutation_rate = 10 #TWENTY-FIVE PERCENT(25%) CHANCE OF MUTATION AFTER CROSSOVER
 
-            current_generation = Selection(self.population) #SELECT PARENTS
-            self.population = []
-            self.population = Crossover(pivot, current_generation[0], current_generation[1]) #PERFORM CROSSOVER
-            self.generation += 1
+            current_generation = Selection(self.population) #PERFORM SELECTION
+            
+            newpop = []
+            for i in range(0,num_children):
+                kids = Crossover(pivot, current_generation[0], current_generation[1]) #PERFORM CROSSOVER
+                newpop.append(kids[0])
+                newpop.append(kids[1])
+            self.population = newpop
+            self.generation += 1 #INCREMENT THE GENERATION
             for chromo in self.population:
                 chromo._info = Mutation(mutation_rate, chromo) #PERFORM MUTATION
-                #self.population.append(chromo) #ADD THE CHROMOSOME TO THE POPULATION
         
         self._file_dump.close() #CLOSE THE OPENED FILE AFTER ALGORITHM IS FINISHED
 
 
 def main():
     a = Algorithm()
-    e = Expression('(a) * (b) * (c) * (!d) * (!e) * (!f)')
-    #e.LoadRandomExpression()
+    e = Expression('(a)*(c)*(d)*(e)*(f)*(g)*(h)*(i)*(j)*(k)*(l)*(m)*(n)*(o)*(p)*(q)*(r)*(s)*(t)*(u)*(v)*(w)*(x)*(y)*(z)')
     a._run_algorithm(e)
     a._file_dump.close()
-    print 'DONE'
+    print 'ALGO LOGGED @ "algo_dump.txt"'
     
 
 main()
